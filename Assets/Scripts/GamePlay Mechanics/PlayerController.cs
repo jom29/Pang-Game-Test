@@ -13,19 +13,28 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Projectile Properties")]
-    public GameObject projectile_prefab;
-    public float projectile_velocity = 10;
-    public Transform projectile_respawner;
-    public AudioSource bow_arrow_sound;
+    public GameObject projectile_prefab;                         //PROJECTILE PREFAB
+    public float projectile_velocity = 10;                       //PROJECTILE VELOCITY
+    public Transform projectile_respawner;                       // USED FOR SINGLE PROJECTILE, PLACED AT THE CENTER OF THE GUN
+    public Transform projectile_respawner_left_Direction;        // USED TO RESPAWN GUNTYPE 2 PROJECTILE, PLACED AT THE LEFT SIDE OF THE GUN
+    public Transform projectile_respawner_right_Direciton;       // USED TO RESPAWN GUN TYPE 2 PROJECTILE, PLACED AT THE RIGHT SIDE OF THE GUN
+    public Vector2 leftDirection;
+    public Vector2 rightDirection;
+    
+    public AudioSource bow_arrow_sound;                          // USED SOUND WHEN FIRING THE BOW-ARROW
+    public Sprite[] character_display;                           // USED TO SWITCHING BACK FORTH THE VISUAL LOOK OF THE PLAYER - TO INDICATE WHAT'S UPGRADE IT HAS. ONLY ESTHETIC
+    public SpriteRenderer character_sprite;                      // THE ACTUAL SPRITE THAT NEED TO CHANGE FROM THE SCENE
 
-    public int health = 4;
-    public Image health_gui;
-    public Sprite[] health_status;
+
+    [Header("Player Health Properties")]                       
+    public int health = 4;                                       // PLAYER HEALTH STATUS
+    public Image health_gui;                                     //PLAYER HEALTH GRAPHIC DISPLAY CONTAINER
+    public Sprite[] health_status;                               //HEALTH STATUS IN INDIVIDUAL SPRITES
 
 
-    public static PlayerController instance;
-    public RectTransform joystick;
-    public float horizontal_value;
+    public static PlayerController instance;                    //USED FOR ACCESSING OTHER SCRIPT Methods and Variables
+    public RectTransform joystick;                              // USED FOR MOBILE STICK CONTROLLER
+    public float horizontal_value;                              
     public float vertical_value;
 
     public bool joystick_switch;
@@ -40,20 +49,77 @@ public class PlayerController : MonoBehaviour
     
     public void Shoot()
     {
-        //----------------------------------------------------- SHOOT METHOD ---------------------------------------------------------------------
-
-        bow_arrow_sound.Play();
-
-        // Instantiate the projectile at the position and rotation of projectile_respawner (gun mouth)
-        Rigidbody2D clone;
-        clone = Instantiate(projectile_prefab.GetComponent<Rigidbody2D>(), projectile_respawner.position, projectile_respawner.rotation);
-
-        // Give the cloned object an initial velocity along the current
-        if (clone != null)
+        //----------------------------------------------------- SHOOT METHOD SINGLE BOW ARROW ---------------------------------------------------------------------
+        if(EventManager.instance.gunType == 0) // MAKE SURE THAT WE CHECK THE EVENTMANAGER SCRIPT AND CHECK GUNTYPE VARIABLE. THIS METHOD IS USED FOR SINGLE BOW-ARROW ONLY
         {
-            clone.AddForce(transform.up * projectile_velocity, ForceMode2D.Impulse);
+            bow_arrow_sound.Play();
+
+            // Instantiate the projectile at the position and rotation of projectile_respawner (gun mouth)
+            Rigidbody2D clone;
+            clone = Instantiate(projectile_prefab.GetComponent<Rigidbody2D>(), projectile_respawner.position, projectile_respawner.rotation);
+
+            // Give the cloned object an initial velocity along the current
+            if (clone != null)
+            {
+                clone.AddForce(transform.up * projectile_velocity, ForceMode2D.Impulse);
+            }
         }
+       
         //--------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+        //------------------------------------------------- SHOOT METHOD TRIPLE BOW ARROW -----------------------------------------------------------------------
+        if(EventManager.instance.gunType == 1)
+        {
+            bow_arrow_sound.Play(); //PLAY GUN SOUND EFFECTS
+
+
+
+
+            // CENTER PROJECTILE
+            Rigidbody2D clone;
+            Rigidbody2D clone_left;
+            Rigidbody2D clone_right;
+
+
+
+            clone = Instantiate(projectile_prefab.GetComponent<Rigidbody2D>(), projectile_respawner.position, projectile_respawner.rotation);
+            clone_left = Instantiate(projectile_prefab.GetComponent<Rigidbody2D>(), projectile_respawner_left_Direction.position, projectile_respawner_left_Direction.rotation);
+            clone_right = Instantiate(projectile_prefab.GetComponent<Rigidbody2D>(), projectile_respawner_right_Direciton.position, projectile_respawner_right_Direciton.rotation);
+
+
+            // PROJECTILE CENTER - APPLY FORCE
+            if (clone != null)
+            {
+                clone.AddForce(transform.up * projectile_velocity, ForceMode2D.Impulse);
+            }
+
+            // PROJECTILE LEFT - APPLY FORCE
+            if(clone_left != null)
+            {
+                clone_left.AddForce(leftDirection * 4, ForceMode2D.Impulse);
+                clone_left.GetComponent<Transform>().rotation = Quaternion.Euler(0, 0, 30);
+            }
+
+
+            // PROJECTILE RIGHT - APPLY FORCE
+            if(clone_right != null)
+            {
+                clone_right.AddForce(rightDirection * 4, ForceMode2D.Impulse);
+                clone_right.GetComponent<Transform>().rotation = Quaternion.Euler(0, 0, -30);
+            }
+
+
+
+
+        }
+        //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
     }
 

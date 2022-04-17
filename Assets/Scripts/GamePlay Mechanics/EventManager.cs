@@ -7,12 +7,18 @@ using UnityEngine.SceneManagement;
 
 public class EventManager : MonoBehaviour
 {
+    //GUN TYPE STATE MARKER. NOTE
+    //GUNTYPE INT 0, REPRESENT AS single Arrow
+    //GUNTYPE INT 1, REPRESENT AS Triple Arrow
+    public int gunType = 0;
+    public GameObject[] item_prefab;
     public static EventManager instance;
     public int score;
     public Text score_gui;
     public Text popup_score;
     public Text popup_scorev2;
     public GameObject bonus300_popup;
+    public AudioSource pickup_sounds;
     public AudioSource balloon_soundPlayer;
     public AudioSource heart_beat;
     public AudioSource bounce_sound;
@@ -31,6 +37,31 @@ public class EventManager : MonoBehaviour
 
     public int stage = 1;
     public Text stage_gui;
+
+
+    public IEnumerator resetGun_coroutine; //USE TO RESET GUN 
+    public IEnumerator instantiate_items_coroutine; // USE TO SCHEDULE RESPAWN IN THE SCENE AFTER POPPING UP BALLOONS
+    public bool instantiating = false; // USING THIS MARKER, WE NEED TO WAIT UNTIL THE ITEM IS INSTANTIATED, BEFORE REPEATING CALLING ITEMS AND PUT IN THE SCENE
+    public int random_ItemRespawn; // THIS WILL USE AS RANDOM RANGE FROM 1-4. THIS WILL BE TAG PER BALLOON SIZE
+
+    public IEnumerator WaitToResetGun(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        pickup_sounds.Play();
+        gunType = 0;
+        PlayerController.instance.character_sprite.sprite = PlayerController.instance.character_display[0];
+    }
+
+
+    public IEnumerator WaitToInstantiate_Items(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        instantiating = false;
+        
+    }
+
+
+
 
 
     private void Start()
@@ -93,8 +124,6 @@ public class EventManager : MonoBehaviour
             popup_score.text = "SCORE: " + score;
             Time.timeScale = 0;
         }
-
-        Debug.Log("Toogle Value: " + ignore_health.isOn);
 
 
 
