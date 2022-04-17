@@ -94,6 +94,62 @@ public class BalloonBehaviour : MonoBehaviour
 
 
 
+
+
+
+
+
+
+
+            //STRICTLY FOLLOWS 5-15 MINUTES TIME LAPSE BEFORE REPEATING THIS RESPAWN ITEMS.
+            //SECONDLY MAKE SURE THAT THE PLAYER IS NOT YET USING THE UPGRADED BOW ARROW. NEED TO BE CLEAR THAT PLAYER IS ON BASIC BOW ARROW ONLY - BEFORE ALLOWING TO RESPAWN THE NEW GUN ITEM
+            // REASON: IT DOESN'T MAKE SENSE TO RESPAWN IT WHILE USER ALREADY HAVE THIS.
+            //ONLY APPLIED THIS RESPAWN IN THE SMALLEST BALLOON, THE MEDIUM TO SHOOT
+            if (EventManager.instance.instantiating == false && EventManager.instance.gunType == 0 && balloonType.Contains("3rd"))
+            {
+                EventManager.instance.instantiate_items_coroutine = EventManager.instance.WaitToInstantiate_Items(Random.Range(5, 15)); // SETUP RANDOMIZE 5 TO 15 SECONDS BEFORE SPAWNING NEW ITEMS
+                EventManager.instance.StartCoroutine(EventManager.instance.instantiate_items_coroutine); //EXECUTE NEW RESPAWN TIME OF ITEMS
+                EventManager.instance.instantiating = true; // INSTANTIATING MARKER IS ACTIVE NOW.
+
+                GameObject gunGO = GameObject.FindGameObjectWithTag("items"); // FIND ITEMS ON THE SCENE
+
+
+                    if (gunGO == null) // IF NOT FOUND, AND VALIDATED THAT WE DON'T HAVE ANYMORE ITEMS ON THE SCENE, THEN WE CAN NOW INSTANTIATE NEW ITEM
+                    {
+                       try
+                       {
+                        GameObject clone_item;
+                        clone_item = Instantiate(EventManager.instance.item_prefab[Random.Range(0, EventManager.instance.item_prefab.Length)], transform.position, transform.rotation);
+                        clone_item.name = "ScorePackage_prefab";
+                       }
+                       
+
+                       catch
+                       {
+                         
+                       }
+                       
+                    }
+                
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             //MAKE SURE THAT WE HIT THE FIRST INSTANCE OF BALLOON, BEFORE THE SECOND INSTANCE
             if (balloonType.Contains("1st") && balloon_trigger == false)
             {

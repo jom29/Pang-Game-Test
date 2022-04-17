@@ -3042,6 +3042,10 @@ MonoBehaviour:
   gunType: 0
   item_prefab:
   - {fileID: 4444683042495943620, guid: 3dfe8e2399e471e4db7e824d5c20cb70, type: 3}
+  - {fileID: 583229538373407520, guid: 47ac2fc5e47034544ac756f27d4a8ab4, type: 3}
+  - {fileID: 583229538373407520, guid: c68c38de6393fbb44bed07a3b922689f, type: 3}
+  - {fileID: 583229538373407520, guid: 44fec09291957a742b1e95b6fbaaaccd, type: 3}
+  - {fileID: 3923110848968857962, guid: c8f3e9a1ef2af174e94baac96700548a, type: 3}
   score: 0
   score_gui: {fileID: 1681264442}
   popup_score: {fileID: 748466047}
